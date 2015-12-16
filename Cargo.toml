@@ -1,0 +1,5 @@
+[package]
+name = "os_in"
+version = "0.1.0"
+authors = ["Antoni Boucher <bouanto@zoho.com>"]
+build = "build.rs"
