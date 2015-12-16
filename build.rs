@@ -6,7 +6,7 @@ use std::process::Command;
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
     let arch_output_dir = format!("{}/arch/{}", out_dir, ARCH);
-    let files = ["multiboot_header", "boot"];
+    let files = ["multiboot_header", "boot", "long_mode_init"];
     let arch_path = format!("src/arch/{}", ARCH);
     let kernel = format!("{}/kernel-{}.bin", out_dir, ARCH);
 
