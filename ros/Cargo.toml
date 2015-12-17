@@ -1,0 +1,11 @@
+[package]
+name = "ros"
+version = "0.1.0"
+authors = ["Antoni Boucher <bouanto@zoho.com>"]
+
+[dependencies]
+rlibc = "0.1.4"
+
+[lib]
+crate-type = ["staticlib"]
+name = "ros"

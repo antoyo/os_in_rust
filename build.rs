@@ -10,6 +10,7 @@ fn main() {
     let arch_path = format!("src/arch/{}", ARCH);
     let kernel = format!("{}/kernel-{}.bin", out_dir, ARCH);
 
+    build_ros();
     assemble(&arch_output_dir, &files, &arch_path);
     link(&arch_output_dir, &files, &arch_path, &kernel);
     iso(&out_dir, &arch_path, &kernel);
@@ -25,6 +26,13 @@ fn assemble(arch_output_dir: &str, files: &[&str], arch_path: &str) {
             .args(&["-felf64", &assembly_file, "-o", &output_file])
             .status().unwrap();
     }
+}
+
+fn build_ros() {
+    Command::new("cargo")
+        .current_dir("ros")
+        .args(&["rustc", "--", "-Z", "no-landing-pads", "-C", "no-redzone"])
+        .status().unwrap();
 }
 
 fn iso(out_dir: &str, arch_path: &str, kernel: &str) {
@@ -48,9 +56,10 @@ fn link(arch_output_dir: &str, files: &[&str], arch_path: &str, kernel: &str) {
     for file in files.iter() {
         output_files.push(format!("{}/{}.o", arch_output_dir, file));
     }
+    output_files.push("ros/target/debug/libros.a".to_owned());
     let linker_script = arch_path.to_owned() + "/linker.ld";
     Command::new("ld")
-        .args(&["-n", "-T", &linker_script, "-o", kernel])
+        .args(&["-n", "--gc-sections", "-T", &linker_script, "-o", kernel])
         .args(&output_files)
         .status().unwrap();
 }
