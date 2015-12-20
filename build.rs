@@ -37,7 +37,6 @@ fn build_ros() {
 
 fn iso(out_dir: &str, arch_path: &str, kernel: &str) {
     let isofiles_dir = format!("{}/isofiles", out_dir);
-    println!("1");
     let grub_dir = format!("{}/isofiles/boot/grub", out_dir);
     create_dir_all(&grub_dir).unwrap();
     let grub_kernel = format!("{}/isofiles/boot/kernel.bin", out_dir);
@@ -47,7 +46,7 @@ fn iso(out_dir: &str, arch_path: &str, kernel: &str) {
     copy(&config, &grub_config).unwrap();
     let iso = format!("target/debug/build/os-{}.iso", ARCH);
     Command::new("grub-mkrescue")
-        .args(&["-o", &iso, &isofiles_dir])
+        .args(&["-d", "/usr/lib/grub/i386-pc", "-o", &iso, &isofiles_dir])
         .status().unwrap();
 }
 
