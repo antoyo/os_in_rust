@@ -142,7 +142,7 @@ impl Writer {
         let mut writer = Writer::new(Color::Blue, Color::LightGreen);
         writer.write_byte(b'H');
         writer.write_str("ello! ");
-        write!(writer, "The numbers are {} and {}", 42, 1.0 / 3.0);
+        write!(writer, "The numbers are {} and {}", 42, 1.0 / 3.0).unwrap();
     }
 
     pub fn write_str(&mut self, s: &str) {

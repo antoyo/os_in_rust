@@ -1,13 +1,16 @@
 #![feature(const_fn, lang_items, unique)]
 #![no_std]
 
+#[macro_use]
+extern crate bitflags;
 extern crate multiboot2;
 extern crate rlibc;
 extern crate spin;
+extern crate x86;
 
-mod memory;
 #[macro_use]
 mod vga_buffer;
+mod memory;
 
 use memory::{AreaFrameAllocator, FrameAllocator};
 use vga_buffer::Writer;
@@ -38,7 +41,7 @@ pub extern fn rust_main(multiboot_information_address: usize) {
     Writer::print_something();
 
     vga_buffer::WRITER.lock().write_str("Hello again");
-    write!(vga_buffer::WRITER.lock(), ", some numbers: {} {}", 42, 1.337);
+    write!(vga_buffer::WRITER.lock(), ", some numbers: {} {}", 42, 1.337).unwrap();
 
     vga_buffer::clear_screen();
     println!("Hello World{}", "!");
@@ -72,14 +75,16 @@ pub extern fn rust_main(multiboot_information_address: usize) {
 
     let mut frame_allocator = AreaFrameAllocator::new(kernel_start as usize, kernel_end as usize, multiboot_start as usize, multiboot_end as usize, memory_map_tag.memory_areas());
 
-    println!("{:?}", frame_allocator.allocate_frame());
+    /*println!("{:?}", frame_allocator.allocate_frame());
 
     for i in 0.. {
         if let None = frame_allocator.allocate_frame() {
             println!("allocated {} frames", i);
             break;
         }
-    }
+    }*/
+
+    memory::test_paging(&mut frame_allocator);
 
     loop { }
 }

@@ -1,6 +1,9 @@
 mod area_frame_allocator;
+mod paging;
 
 pub use self::area_frame_allocator::AreaFrameAllocator;
+use self::paging::PhysicalAddress;
+pub use self::paging::test_paging;
 
 #[derive(Debug, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Frame {
@@ -14,6 +17,10 @@ impl Frame {
         Frame {
             number: address / PAGE_SIZE,
         }
+    }
+
+    fn start_address(&self) -> PhysicalAddress {
+        self.number * PAGE_SIZE
     }
 }
 
